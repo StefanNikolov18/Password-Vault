@@ -1,6 +1,6 @@
-package password.vault.algorithm;
+package password.vault.server.algorithm;
 
-import password.vault.exception.CipherException;
+import password.vault.server.exception.CipherException;
 
 import javax.crypto.Cipher;
 import javax.crypto.CipherOutputStream;
@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class AES {
+public class AES implements SymmetricBlockCipher {
     private static final int KILOBYTE = 1024;
     private final SecretKey secretKey;
 
