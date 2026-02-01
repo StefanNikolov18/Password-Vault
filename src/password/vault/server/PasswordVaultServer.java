@@ -1,5 +1,7 @@
 package password.vault.server;
 
+import password.vault.server.handler.ClientRequestHandler;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -10,7 +12,7 @@ import java.util.concurrent.Executors;
 public class PasswordVaultServer {
 
     private static final int SERVER_PORT = 4444;
-    private static final int MAX_THREADS = 2;
+    private static final int MAX_THREADS = 10;
 
     public static void main(String... args) {
         Thread.currentThread().setName("PasswordVaultServer-Main");

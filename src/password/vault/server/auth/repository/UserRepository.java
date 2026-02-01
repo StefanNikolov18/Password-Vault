@@ -17,11 +17,11 @@ public class UserRepository {
         this.users = loader.load();
     }
 
-    boolean exists(String username) {
+    public boolean usernameExists(String username) {
         return this.users.containsKey(username);
     }
 
-    String getHashedPassword(String username) {
+    public String getHashedPassword(String username) {
         return this.users.get(username);
     }
 }

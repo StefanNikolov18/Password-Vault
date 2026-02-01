@@ -21,17 +21,14 @@ public class PasswordVaultClient {
             System.out.println("Connected to the server.");
 
             while (true) {
-                System.out.print("Enter message: ");
-                String message = scanner.nextLine(); // read a line from the console
+                System.out.print("> ");
+                String command = scanner.nextLine(); // read a line from the console
 
-                if ("quit".equals(message)) {
-                    break;
-                }
+                writer.println(command); // send the message to the server
 
-                writer.println(message); // send the message to the server
-
-                String reply = reader.readLine(); // read the response from the server
-                System.out.println("The server replied <" + reply + ">");
+                String serverReply = reader.readLine(); // read the response from the server
+                System.out.println(serverReply);
+                System.out.println();
             }
 
         } catch (IOException e) {

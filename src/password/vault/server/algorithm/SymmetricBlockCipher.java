@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import password.vault.server.exception.CipherException;
 
 public interface SymmetricBlockCipher {
+
     /**
      * Encrypts the data from inputStream and puts it into outputStream
      *

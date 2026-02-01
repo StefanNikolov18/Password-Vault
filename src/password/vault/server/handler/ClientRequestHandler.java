@@ -1,4 +1,4 @@
-package password.vault.server;
+package password.vault.server.handler;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,10 +22,13 @@ public class ClientRequestHandler implements Runnable {
              BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
              socket) { // resources created elsewhere can also be declared here and will be auto-closed
 
-            String inputLine;
-            while ((inputLine = in.readLine()) != null) { // read the message from the client
-                System.out.println("Message received from client: " + inputLine);
-                out.println("Echo " + inputLine); // send response back to the client
+            CommandHandler cmdHandler = new CommandHandler();
+
+            String commandLine;
+            while ((commandLine = in.readLine()) != null) { // read the message from the client
+                System.out.println("Message received from client: " + commandLine);
+                String message = cmdHandler.execute(commandLine);
+                out.println(message); // send response back to the client
             }
 
         } catch (IOException e) {
