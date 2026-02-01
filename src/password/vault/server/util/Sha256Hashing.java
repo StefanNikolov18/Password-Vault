@@ -7,6 +7,10 @@ import java.security.NoSuchAlgorithmException;
 public class Sha256Hashing {
 
     public static String hashing(String password) {
+        if (password == null) {
+            throw new IllegalArgumentException("Password cannot be null!");
+        }
+
         String hashedGivenPassword;
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");

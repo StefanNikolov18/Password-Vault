@@ -1,35 +1,35 @@
 package password.vault.server.handler;
 
-import password.vault.server.algorithm.AES;
-import password.vault.server.algorithm.SymmetricBlockCipher;
-import password.vault.server.auth.repository.UserRepository;
-import password.vault.server.exception.CipherException;
-import password.vault.server.util.SecretKeyGenerator;
-import password.vault.server.util.Sha256Hashing;
+import password.vault.server.repository.UserRepository;
+import password.vault.server.service.auth.AuthenticationResult;
+import password.vault.server.service.auth.AuthenticationService;
+import password.vault.server.service.VaultService;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 public class CommandHandler {
-    private boolean isLogged = false;
+
+    private AuthenticationService authService;    // for register/login user in the userRepository
+    private VaultService vaultService;                      // for retrieve/generate/add/remove password
     private String currentUser = null;
 
-    private UserRepository userRepository;
-    private SymmetricBlockCipher cipher;
-
-    public CommandHandler(UserRepository userRepository) throws NoSuchAlgorithmException {
-        this.userRepository = userRepository;
-        this.cipher = new AES(SecretKeyGenerator.generateSecretKey());
+    public CommandHandler(UserRepository userRepository) {
+        if (userRepository == null) {
+            throw new IllegalArgumentException("UserRepository is null");
+        }
+        this.authService = new AuthenticationService(userRepository);
+        this.vaultService = new VaultService(userRepository);
     }
 
-    public String execute(String commandLine) throws CipherException {
+    public String execute(String commandLine) {
         if (commandLine == null || commandLine.isBlank()) {
             return "Invalid command line! Type help for more information.";
         }
 
-        String[] args = commandLine.split(" ");
-        String cmd = args[0];
+        String[] line = commandLine.split(" ");
+        String cmd = line[0];
+
+        String[] args = Arrays.copyOfRange(line, 1, line.length);
 
         return switch (cmd) {
             case "register" -> register(args);
@@ -46,37 +46,38 @@ public class CommandHandler {
     }
 
     private String register(String[] args) {
-        return "Undefined yet!";
-    }
-
-    private String login(String[] args) throws CipherException {
-        if (args.length != 2) {
-            return "Invalid command line! Must give username and password to login! Type help for more information.";
-        } else if (isLogged) {
+        if (currentUser != null) {
             return "Already logged in!";
         }
 
-        String givenUsername = args[0];
-        String givenPassword = args[1];
-
-        if (!userRepository.usernameExists(givenUsername)) {
-            return "Invalid username or password! Please try again.";
+        AuthenticationResult result = authService.register(args);
+        if (result.success()) {
+            currentUser = result.username();
         }
 
-        String hashedGivenPassword = Sha256Hashing.hashing(givenPassword);
+        return result.message();
+    }
 
-        if (!hashedGivenPassword.equals(userRepository.getHashedPassword(givenUsername))) {
-            return "Invalid username or password! Please try again.";
+    private String login(String[] args) {
+        if (currentUser != null) {
+            return "Already logged in!";
         }
 
-        isLogged = true;
-        currentUser = givenUsername;
+        AuthenticationResult result = authService.login(args);
+        if (result.success()) {
+            currentUser = result.username();
+        }
 
-        return "Login successful!";
+        return result.message();
     }
 
     private String logout(String[] args) {
-        return "Undefined yet!";
+        if (currentUser == null) {
+            return "No one to log out!";
+        }
+
+        this.currentUser = null;
+        return "Logout successful";
     }
 
     private String retrieveCredentials(String[] args) {

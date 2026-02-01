@@ -1,4 +1,4 @@
-package password.vault.server.auth.loader;
+package password.vault.server.repository.loader;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -1,11 +1,14 @@
 package password.vault.server;
 
+import password.vault.server.repository.UserRepository;
 import password.vault.server.handler.ClientRequestHandler;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -22,15 +25,17 @@ public class PasswordVaultServer {
         try (ServerSocket serverSocket = new ServerSocket(SERVER_PORT)) {
 
             InetAddress address = InetAddress.getLocalHost();
-            System.out.println("Password Vault Server started on "
-                    + address.getHostAddress() + ":" + SERVER_PORT);
+            System.out.println("Password Vault Server started on " + address.getHostAddress() + ":" + SERVER_PORT);
+
+            Path userPath = Path.of("data", "users.db");
+            UserRepository userRepository = new UserRepository(Files.newInputStream(userPath));
 
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Client connected: "
                         + clientSocket.getInetAddress() + ":" + clientSocket.getPort());
 
-                ClientRequestHandler clientHandler = new ClientRequestHandler(clientSocket);
+                ClientRequestHandler clientHandler = new ClientRequestHandler(clientSocket, userRepository);
 
                 executor.execute(clientHandler);
             }
