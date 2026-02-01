@@ -1,4 +1,4 @@
-package password.vault.exception;
+package password.vault.server.exception;
 
 public class CipherException extends Exception {
 

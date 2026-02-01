@@ -1,5 +1,5 @@
-import password.vault.exception.CipherException;
+import password.vault.server.exception.CipherException;
 
 void main() throws CipherException {
-
+    System.out.print(3);
 }
