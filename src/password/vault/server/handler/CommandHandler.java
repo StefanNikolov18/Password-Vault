@@ -1,107 +1,62 @@
 package password.vault.server.handler;
 
+import password.vault.server.command.Command;
+import password.vault.server.command.CommandResult;
+import password.vault.server.command.LoginCommand;
+import password.vault.server.command.RegisterCommand;
 import password.vault.server.repository.UserRepository;
-import password.vault.server.service.auth.AuthenticationResult;
 import password.vault.server.service.auth.AuthenticationService;
-import password.vault.server.service.VaultService;
+import password.vault.server.service.vault.VaultService;
 
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CommandHandler {
-
-    private AuthenticationService authService;    // for register/login user in the userRepository
-    private VaultService vaultService;                      // for retrieve/generate/add/remove password
+    private final Map<String, Command> commands = new HashMap<>();
     private String currentUser = null;
 
-    public CommandHandler(UserRepository userRepository) {
+    public CommandHandler(UserRepository userRepository) throws IOException {
         if (userRepository == null) {
-            throw new IllegalArgumentException("UserRepository is null");
+            throw new IllegalArgumentException("userRepository cannot be null");
         }
-        this.authService = new AuthenticationService(userRepository);
-        this.vaultService = new VaultService(userRepository);
+
+        AuthenticationService authService = new AuthenticationService(userRepository);
+        VaultService vaultService = new VaultService(userRepository);
+        commands.put("register", new RegisterCommand(authService));
+        commands.put("login", new LoginCommand(authService));
+
     }
 
     public String execute(String commandLine) {
         if (commandLine == null || commandLine.isBlank()) {
-            return "Invalid command line! Type help for more information.";
+            throw new IllegalArgumentException("commandLine cannot be null");
         }
 
-        String[] line = commandLine.split(" ");
-        String cmd = line[0];
+        String[] parts = commandLine.split(" ");
+        String cmd = parts[0];
+        String[] args = Arrays.copyOfRange(parts, 1, parts.length);
 
-        String[] args = Arrays.copyOfRange(line, 1, line.length);
-
-        return switch (cmd) {
-            case "register" -> register(args);
-            case "login" ->  login(args);
-            case "logout" -> logout(args);
-            case "retrieve-credentials" -> retrieveCredentials(args);
-            case "generate-password" -> generatePassword(args);
-            case "add-password" -> addPassword(args);
-            case "remove-password" -> removePassword(args);
-            case "disconnect" -> disconnect();
-            case "help" -> help();
-            default -> "Invalid command! Type help for more information.";
-        };
-    }
-
-    private String register(String[] args) {
-        if (currentUser != null) {
-            return "Already logged in!";
+        if (cmd.equals("logout")) {
+            if (currentUser == null) {
+                return "You are not logged in";
+            }
+            currentUser = null;
+            return "Logout successful.";
         }
 
-        AuthenticationResult result = authService.register(args);
-        if (result.success()) {
-            currentUser = result.username();
+        Command command = commands.get(cmd);
+        if (command == null) {
+            return "Unknown command: " + cmd + "! Type help for more information.";
+        }
+
+        CommandResult result = command.execute(args, currentUser);
+        if (result.newUser() != null) {
+            currentUser = result.newUser();
         }
 
         return result.message();
-    }
-
-    private String login(String[] args) {
-        if (currentUser != null) {
-            return "Already logged in!";
-        }
-
-        AuthenticationResult result = authService.login(args);
-        if (result.success()) {
-            currentUser = result.username();
-        }
-
-        return result.message();
-    }
-
-    private String logout(String[] args) {
-        if (currentUser == null) {
-            return "No one to log out!";
-        }
-
-        this.currentUser = null;
-        return "Logout successful";
-    }
-
-    private String retrieveCredentials(String[] args) {
-        return "Undefined yet!";
-    }
-
-    private String generatePassword(String[] args) {
-        return "Undefined yet!";
-    }
-
-    private String addPassword(String[] args) {
-        return "Undefined yet!";
-    }
-
-    private String removePassword(String[] args) {
-        return "Undefined yet!";
-    }
-
-    private String disconnect() {
-        return "Undefined yet!";
-    }
-
-    private String help() {
-        return "Undefined yet!";
     }
 
 }
