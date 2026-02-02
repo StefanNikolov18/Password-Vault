@@ -1,8 +1,5 @@
 package password.vault.server.algorithm;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import password.vault.server.exception.CipherException;
 
 public interface SymmetricBlockCipher {
@@ -10,18 +7,16 @@ public interface SymmetricBlockCipher {
     /**
      * Encrypts the data from inputStream and puts it into outputStream
      *
-     * @param inputStream  the input stream where the data is read from
-     * @param outputStream the output stream where the encrypted result is written into
+     * @param plainText text to encrypt
      * @throws CipherException if the encrypt/decrypt operation cannot be completed successfully
      */
-    void encrypt(InputStream inputStream, OutputStream outputStream) throws CipherException;
+    String encrypt(String plainText) throws CipherException;
 
     /**
      * Decrypts the data from inputStream and puts it into outputStream
      *
-     * @param inputStream  the input stream where the data is read from
-     * @param outputStream the output stream where the decrypted result is written into
+     * @param plainText text to decript
      * @throws CipherException if the encrypt/decrypt operation cannot be completed successfully
      */
-    void decrypt(InputStream inputStream, OutputStream outputStream) throws CipherException;
+    String decrypt(String plainText) throws CipherException;
 }

@@ -3,14 +3,11 @@ package password.vault.server.algorithm;
 import password.vault.server.exception.CipherException;
 
 import javax.crypto.Cipher;
-import javax.crypto.CipherOutputStream;
 import javax.crypto.SecretKey;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 public class AES implements SymmetricBlockCipher {
-    private static final int KILOBYTE = 1024;
     private final SecretKey secretKey;
 
     /**
@@ -27,54 +24,43 @@ public class AES implements SymmetricBlockCipher {
         this.secretKey = secretKey;
     }
 
-    public void encrypt(InputStream inputStream, OutputStream outputStream)
-            throws CipherException {
-
-        if (inputStream == null || outputStream == null) {
-            throw new IllegalArgumentException("Input and output stream parameters cannot be null.");
+    /**
+     * Encrypts a plain text string and returns a Base64 encoded cipher text.
+     */
+    public String encrypt(String plainText) throws CipherException {
+        if (plainText == null) {
+            throw new IllegalArgumentException("Input cannot be null");
         }
 
         try {
             Cipher cipher = Cipher.getInstance("AES");
             cipher.init(Cipher.ENCRYPT_MODE, secretKey);
 
-            try (var cipherOutputStream = new CipherOutputStream(outputStream, cipher)) {
-                byte[] buffer = new byte[KILOBYTE];
-                int bytesRead;
+            byte[] encryptedBytes = cipher.doFinal(plainText.getBytes(StandardCharsets.UTF_8));
+            return Base64.getEncoder().encodeToString(encryptedBytes);
 
-                while ((bytesRead = inputStream.read(buffer)) != -1) {
-                    cipherOutputStream.write(buffer, 0, bytesRead);
-                }
-            }
-        } catch (IOException e) {
-            throw new CipherException("Error while IO.", e);
         } catch (Exception e) {
-            throw new CipherException("Error during encryption occurred!", e);
+            throw new CipherException("Error during encryption", e);
         }
-
     }
 
-    public void decrypt(InputStream inputStream, OutputStream outputStream)
-            throws CipherException {
-
-        if (inputStream == null || outputStream == null) {
-            throw new IllegalArgumentException("Input and output stream parameters cannot be null.");
+    /**
+     * Decrypts a Base64 encoded cipher text string and returns the plain text.
+     */
+    public String decrypt(String cipherText) throws CipherException {
+        if (cipherText == null) {
+            throw new IllegalArgumentException("Input cannot be null");
         }
 
         try {
             Cipher cipher = Cipher.getInstance("AES");
             cipher.init(Cipher.DECRYPT_MODE, secretKey);
 
-            try (var cipherOut = new CipherOutputStream(outputStream, cipher)) {
-                byte[] buffer = new byte[KILOBYTE];
-                int bytesRead;
+            byte[] decodedBytes = Base64.getDecoder().decode(cipherText);
+            byte[] decryptedBytes = cipher.doFinal(decodedBytes);
 
-                while ((bytesRead = inputStream.read(buffer)) != -1) {
-                    cipherOut.write(buffer, 0, bytesRead);
-                }
-            }
-        } catch (IOException e) {
-            throw new CipherException("Error while IO.", e);
+            return new String(decryptedBytes, StandardCharsets.UTF_8);
+
         } catch (Exception e) {
             throw new CipherException("Error during decryption", e);
         }
