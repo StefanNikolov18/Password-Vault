@@ -6,10 +6,15 @@ import password.vault.server.repository.loader.UserLoader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
 import java.util.Map;
 
 public class UserRepository {
+    private static final String USERS_PATH = "data/users.db";
+    private static final String VAULT_DIR_PATH = "data/vault/";
 
     private Map<String, String> users = new HashMap<>();
 
@@ -27,14 +32,37 @@ public class UserRepository {
         return this.users.get(username);
     }
 
-    public void addNewUser(String username, String hashPassword) {
+    public void addNewUser(String username, String hashPassword) throws IOException {
         this.users.put(username, hashPassword);
+
+        saveInDataBase(username, hashPassword);
+        createVaultFile(username);
+    }
+
+    private void saveInDataBase(String username, String hashPassword) throws IOException {
         String newUserLine = username + ":" + hashPassword;
-        try (FileWriter fw = new FileWriter("data/users.db", true)) { // 'true' = append
-            fw.write(newUserLine + System.lineSeparator());  // добавяме нов ред
+        try (FileWriter fw = new FileWriter(USERS_PATH, true)) { // 'true' = append
+            fw.write(newUserLine + System.lineSeparator());
             System.out.println("User appended successfully.");
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
+
+    private void createVaultFile(String username) throws IOException {
+        String newFileName = username + ".vault";
+        Path path = Path.of(VAULT_DIR_PATH, newFileName);
+
+        if (Files.notExists(path)) {
+            Files.createFile(path);
+            System.out.println("Vault file created: " + path.toAbsolutePath());
+        }
+
+        Files.writeString(
+                path,
+                "",                         // initial content
+                StandardOpenOption.CREATE,
+                StandardOpenOption.WRITE
+        );
+
+    }
+
 }

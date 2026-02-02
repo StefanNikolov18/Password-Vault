@@ -1,7 +1,10 @@
 package password.vault.server.service.auth;
 
+import password.vault.server.command.CommandResult;
 import password.vault.server.repository.UserRepository;
-import password.vault.server.util.Sha256Hashing;
+import password.vault.server.service.auth.util.Sha256Hashing;
+
+import java.io.IOException;
 
 // for login and register
 public class AuthenticationService {
@@ -15,32 +18,35 @@ public class AuthenticationService {
         this.userRepository = userRepository;
     }
 
-    public AuthenticationResult register(String[] args) {
+    public CommandResult register(String[] args) {
         if (args.length != REGISTER_NEEDED_ARGUMENTS) {
-            return new AuthenticationResult(false, null,
+            return new CommandResult(null,
                     "Invalid command line arguments! Must be given register <username>" +
                             " <password> <repeat-password>! Type help for more information.");
         } else if (!args[1].equals(args[2])) {
-            return new AuthenticationResult(false, null,
+            return new CommandResult(null,
                     "Passwords don't match! Please try again.");
         } else if (userRepository.usernameExists(args[0])) {
-            return new AuthenticationResult(false, null,
+            return new CommandResult( null,
                     "Username already exists! Please choose another one.");
         }
 
         String givenUsername = args[0];
 
         String hashGivenPassword = Sha256Hashing.hashing(args[1]);
+        try {
+            userRepository.addNewUser(givenUsername, hashGivenPassword); //adding new user
+        } catch (IOException e) {
+            return new CommandResult(null, "Server error occurred while registering.");
+        }
 
-        userRepository.addNewUser(givenUsername, hashGivenPassword); //adding new user
-
-        return new AuthenticationResult(true, givenUsername,
+        return new CommandResult( givenUsername,
                 "Registration successful. You are logged in.");
     }
 
-    public AuthenticationResult login(String[] args) {
+    public CommandResult login(String[] args) {
         if (args.length != LOGIN_NEEDED_ARGUMENTS) {
-            return new AuthenticationResult(false, null,
+            return new CommandResult( null,
                     "Invalid command line! Must be given login " +
                             "<username> <password> to login! Type help for more information.");
         }
@@ -49,18 +55,18 @@ public class AuthenticationService {
         String givenPassword = args[1];
 
         if (!userRepository.usernameExists(givenUsername)) {
-            return new AuthenticationResult(false, null,
+            return new CommandResult( null,
                     "Invalid username or password! Please try again.");
         }
 
         String hashedGivenPassword = Sha256Hashing.hashing(givenPassword);
 
         if ( !hashedGivenPassword.equals(userRepository.getHashedPassword(givenUsername))) {
-            return new AuthenticationResult(false, null,
+            return new CommandResult( null,
                     "Invalid username or password! Please try again.");
         }
 
-        return new AuthenticationResult(true, givenUsername,
+        return new CommandResult( givenUsername,
                 "Login successful");
     }
 }

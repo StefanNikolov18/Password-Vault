@@ -17,7 +17,7 @@ public class PasswordVaultServer {
     private static final int SERVER_PORT = 4444;
     private static final int MAX_THREADS = 10;
 
-    public static void main(String... args) {
+    static void main(String... args) {
         Thread.currentThread().setName("PasswordVaultServer-Main");
 
         ExecutorService executor = Executors.newFixedThreadPool(MAX_THREADS);
