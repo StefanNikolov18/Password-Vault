@@ -17,7 +17,7 @@ public class PasswordVaultClient {
              BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
              Scanner scanner = new Scanner(System.in)) {
 
-            Thread.currentThread().setName("Echo client thread " + socket.getLocalPort());
+            Thread.currentThread().setName("Client thread " + socket.getLocalPort());
             System.out.println("Connected to the server.");
 
             while (true) {
@@ -27,10 +27,13 @@ public class PasswordVaultClient {
                 writer.println(command); // send the message to the server
 
                 String serverReply = reader.readLine(); // read the response from the server
+                if (serverReply == null || serverReply.equalsIgnoreCase("disconnect")) {
+                    break;
+                }
                 System.out.println(serverReply);
                 System.out.println();
             }
-
+            System.out.println("Goodbye!");
         } catch (IOException e) {
             throw new RuntimeException("There is a problem with the network communication", e);
         }

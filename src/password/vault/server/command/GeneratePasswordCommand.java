@@ -11,6 +11,10 @@ public class GeneratePasswordCommand implements Command {
 
     @Override
     public CommandResult execute(String[] args, String currentUser) {
+        if (currentUser == null) {
+            return new CommandResult(null, "You need to login first!");
+        }
+
         return null;
     }
 }

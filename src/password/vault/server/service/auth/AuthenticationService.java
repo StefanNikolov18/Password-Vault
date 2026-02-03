@@ -2,7 +2,7 @@ package password.vault.server.service.auth;
 
 import password.vault.server.command.CommandResult;
 import password.vault.server.repository.UserRepository;
-import password.vault.server.service.auth.util.Sha256Hashing;
+import password.vault.server.algorithm.hashing.Sha256Hashing;
 
 import java.io.IOException;
 
@@ -35,8 +35,8 @@ public class AuthenticationService {
 
         String hashGivenPassword = Sha256Hashing.hashing(args[1]);
         try {
-            userRepository.addNewUser(givenUsername, hashGivenPassword); //adding new user
-        } catch (IOException e) {
+            userRepository.addNewUser(givenUsername, hashGivenPassword); //adding new user in the system
+        } catch (IOException e) {   //error
             return new CommandResult(null, "Server error occurred while registering.");
         }
 

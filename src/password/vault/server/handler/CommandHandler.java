@@ -1,9 +1,6 @@
 package password.vault.server.handler;
 
-import password.vault.server.command.Command;
-import password.vault.server.command.CommandResult;
-import password.vault.server.command.LoginCommand;
-import password.vault.server.command.RegisterCommand;
+import password.vault.server.command.*;
 import password.vault.server.repository.UserRepository;
 import password.vault.server.service.auth.AuthenticationService;
 import password.vault.server.service.vault.VaultService;
@@ -23,10 +20,14 @@ public class CommandHandler {
         }
 
         AuthenticationService authService = new AuthenticationService(userRepository);
-        VaultService vaultService = new VaultService(userRepository);
         commands.put("register", new RegisterCommand(authService));
         commands.put("login", new LoginCommand(authService));
 
+        VaultService vaultService = new VaultService(userRepository);
+        commands.put("retrieve-credentials", new RetrieveCredentialCommand(vaultService));
+        commands.put("generate-password", new GeneratePasswordCommand(vaultService));
+        commands.put("add-password",  new AddPasswordCommand(vaultService));
+        commands.put("remove-password", new RemovePasswordCommand(vaultService));
     }
 
     public String execute(String commandLine) {
@@ -51,7 +52,7 @@ public class CommandHandler {
             return "Unknown command: " + cmd + "! Type help for more information.";
         }
 
-        CommandResult result = command.execute(args, currentUser);
+        CommandResult result = command.execute(args, currentUser); //given parameters and currentUser
         if (result.newUser() != null) {
             currentUser = result.newUser();
         }

@@ -32,7 +32,8 @@ public class UserRepository {
         return this.users.get(username);
     }
 
-    public void addNewUser(String username, String hashPassword) throws IOException {
+    // synchronized section for multiple clients
+    public synchronized void addNewUser(String username, String hashPassword) throws IOException {
         this.users.put(username, hashPassword);
 
         saveInDataBase(username, hashPassword);

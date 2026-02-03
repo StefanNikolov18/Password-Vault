@@ -1,4 +1,4 @@
-package password.vault.server.service.vault;
+package password.vault.server.utils;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;

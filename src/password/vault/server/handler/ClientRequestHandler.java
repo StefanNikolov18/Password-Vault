@@ -31,6 +31,13 @@ public class ClientRequestHandler implements Runnable {
             String commandLine;
             while ((commandLine = in.readLine()) != null) { // read the message from the client
                 System.out.println("Message received from client: " + commandLine);
+
+                if (commandLine.equalsIgnoreCase("disconnect")) {
+                    out.println("disconnect"); // to the client
+                    System.out.println("Disconnected from client " + socket.getRemoteSocketAddress());
+                    break;
+                }
+
                 String message = cmdHandler.execute(commandLine);
                 out.println(message); // send response back to the client
             }

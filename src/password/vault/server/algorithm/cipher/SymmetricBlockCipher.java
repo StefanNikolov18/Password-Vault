@@ -1,4 +1,4 @@
-package password.vault.server.algorithm;
+package password.vault.server.algorithm.cipher;
 
 import password.vault.server.exception.CipherException;
 
@@ -15,7 +15,7 @@ public interface SymmetricBlockCipher {
     /**
      * Decrypts the data from inputStream and puts it into outputStream
      *
-     * @param plainText text to decript
+     * @param plainText text to decrypt
      * @throws CipherException if the encrypt/decrypt operation cannot be completed successfully
      */
     String decrypt(String plainText) throws CipherException;

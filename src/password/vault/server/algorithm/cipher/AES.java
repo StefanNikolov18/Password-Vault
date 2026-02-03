@@ -1,4 +1,4 @@
-package password.vault.server.algorithm;
+package password.vault.server.algorithm.cipher;
 
 import password.vault.server.exception.CipherException;
 

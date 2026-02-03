@@ -3,7 +3,7 @@ package password.vault.server.command;
 import password.vault.server.service.vault.VaultService;
 
 public class RetrieveCredentialCommand implements Command {
-    private VaultService vaultService;
+    private final VaultService vaultService;
 
     public RetrieveCredentialCommand(VaultService vaultService) {
         this.vaultService = vaultService;
@@ -11,6 +11,10 @@ public class RetrieveCredentialCommand implements Command {
 
     @Override
     public CommandResult execute(String[] args, String currentUser) {
-        return null;
+        if (currentUser == null) {
+            return new CommandResult(null, "You need to login first!");
+        }
+
+        return vaultService.retrieveCredentials(args, currentUser);
     }
 }
