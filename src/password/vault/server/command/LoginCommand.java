@@ -3,7 +3,9 @@ package password.vault.server.command;
 import password.vault.server.service.auth.AuthenticationService;
 
 public class LoginCommand implements Command {
-    private AuthenticationService authenticationService;
+    private static final int LOGIN_NEEDED_ARGUMENTS = 2;
+
+    private final AuthenticationService authenticationService;
 
     public LoginCommand(AuthenticationService authenticationService) {
         this.authenticationService = authenticationService;
@@ -16,6 +18,16 @@ public class LoginCommand implements Command {
                     "Already logged in as " + currentUser + "!");
         }
 
-        return authenticationService.login(args);
+        if (args.length != LOGIN_NEEDED_ARGUMENTS) {
+            return new CommandResult( null,
+                    "Invalid command line! Must be given login " +
+                            "<username> <password> to login! " +
+                            "Type help for more information.");
+        }
+
+        String username = args[0];
+        String password = args[1];
+
+        return authenticationService.login(username, password);
     }
 }

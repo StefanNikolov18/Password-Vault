@@ -1,6 +1,10 @@
 package password.vault.server.service.vault;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,10 +73,38 @@ public class VaultRepository {
         final String path = VAULT_DIR_PATH + currentUser + ".vault";
         try (FileWriter fw = new FileWriter(path, true)) { // 'true' = append
             fw.write(website + " " + usernameWebsite + " " + cryptedPassword + System.lineSeparator());
+        } catch (IOException e) {
+            return new VaultResponse(false, "Error writing vault file!");
         }
 
         return new VaultResponse(true,
                 "Added new password for website: " + website +
-                        "with username: " + usernameWebsite);
+                        " with username: " + usernameWebsite);
+    }
+
+    public VaultResponse removePassword(String website, String usernameWebsite, String currentUser) throws IOException {
+        if (currentUser == null || website == null ||  usernameWebsite == null) {
+            throw  new IllegalArgumentException("CurrentUse, Website, password are mandatory!");
+        }
+
+        List<String> vaultUser =  getFromVaultFile(currentUser);
+        if (vaultUser == null) {
+            return new VaultResponse(false, "Server problem while reading vault file!");
+        }
+
+        List<String> result = vaultUser.stream() //remove line with website and username
+                .filter(line -> (!line.startsWith(website) || !line.contains(usernameWebsite)))
+                .toList();
+
+        final String path = VAULT_DIR_PATH + currentUser + ".vault";
+        try (FileWriter fw = new FileWriter(path)) {         // append == false
+            for (String line: result) {
+                fw.write(line +  System.lineSeparator());
+            }
+        } catch (IOException e) {
+            return new VaultResponse(false, "Error writing vault file!");
+        }
+
+        return new VaultResponse(true, "Password successfully removed from vault!");
     }
 }

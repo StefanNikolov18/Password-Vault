@@ -3,7 +3,9 @@ package password.vault.server.command;
 import password.vault.server.service.vault.VaultService;
 
 public class AddPasswordCommand implements Command {
-    private VaultService vaultService;
+    private static final int ADD_PASSWORD_NEEDED_ARGUMENTS = 3;
+
+    private final VaultService vaultService;
 
     public AddPasswordCommand(VaultService vaultService) {
         this.vaultService = vaultService;
@@ -15,6 +17,16 @@ public class AddPasswordCommand implements Command {
             return new CommandResult(null, "You need to login first!");
         }
 
-        return vaultService.addPassword(args, currentUser);
+        if (args.length != ADD_PASSWORD_NEEDED_ARGUMENTS) {
+            return new CommandResult(currentUser,
+                    "Invalid arguments fo add-password <website> <username> <password>!"
+                            + "Please try again.");
+        }
+
+        String website = args[0];
+        String usernameSite = args[1];
+        String password = args[2];
+
+        return vaultService.addPassword(website, usernameSite, password, currentUser);
     }
 }

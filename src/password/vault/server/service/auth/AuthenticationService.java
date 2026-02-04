@@ -9,64 +9,52 @@ import java.io.IOException;
 // for login and register
 public class AuthenticationService {
 
-    private static final int REGISTER_NEEDED_ARGUMENTS = 3;
-    private static final int LOGIN_NEEDED_ARGUMENTS = 2;
-
     private final UserRepository userRepository;
 
     public AuthenticationService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    public CommandResult register(String[] args) {
-        if (args.length != REGISTER_NEEDED_ARGUMENTS) {
-            return new CommandResult(null,
-                    "Invalid command line arguments! Must be given register <username>" +
-                            " <password> <repeat-password>! Type help for more information.");
-        } else if (!args[1].equals(args[2])) {
-            return new CommandResult(null,
-                    "Passwords don't match! Please try again.");
-        } else if (userRepository.usernameExists(args[0])) {
+    public CommandResult register(String username, String password) {
+        if (null == username || null == password) {
+            throw new IllegalArgumentException("username or password is null in register!");
+        }
+
+        if (userRepository.usernameExists(username)) {
             return new CommandResult( null,
                     "Username already exists! Please choose another one.");
         }
 
-        String givenUsername = args[0];
-
-        String hashGivenPassword = Sha256Hashing.hashing(args[1]);
+        String hashGivenPassword = Sha256Hashing.hashing(password);
         try {
-            userRepository.addNewUser(givenUsername, hashGivenPassword); //adding new user in the system
+            userRepository.addNewUser(username, hashGivenPassword); //adding new user in the system
         } catch (IOException e) {   //error
-            return new CommandResult(null, "Server error occurred while registering.");
+            return new CommandResult(null,
+                    "Server error occurred while registering.");
         }
 
-        return new CommandResult( givenUsername,
+        return new CommandResult( username,
                 "Registration successful. You are logged in.");
     }
 
-    public CommandResult login(String[] args) {
-        if (args.length != LOGIN_NEEDED_ARGUMENTS) {
-            return new CommandResult( null,
-                    "Invalid command line! Must be given login " +
-                            "<username> <password> to login! Type help for more information.");
+    public CommandResult login(String username, String password) {
+        if (username == null || password == null) {
+            throw new IllegalArgumentException("username or password is null in login!");
         }
 
-        String givenUsername = args[0];
-        String givenPassword = args[1];
-
-        if (!userRepository.usernameExists(givenUsername)) {
+        if (!userRepository.usernameExists(username)) {
             return new CommandResult( null,
                     "Invalid username or password! Please try again.");
         }
 
-        String hashedGivenPassword = Sha256Hashing.hashing(givenPassword);
+        String hashedGivenPassword = Sha256Hashing.hashing(password);
 
-        if ( !hashedGivenPassword.equals(userRepository.getHashedPassword(givenUsername))) {
+        if ( !hashedGivenPassword.equals(userRepository.getHashedPassword(username))) {
             return new CommandResult( null,
                     "Invalid username or password! Please try again.");
         }
 
-        return new CommandResult( givenUsername,
+        return new CommandResult( username,
                 "Login successful");
     }
 }

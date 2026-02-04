@@ -23,7 +23,7 @@ public class CommandHandler {
         commands.put("register", new RegisterCommand(authService));
         commands.put("login", new LoginCommand(authService));
 
-        VaultService vaultService = new VaultService(userRepository);
+        VaultService vaultService = new VaultService();
         commands.put("retrieve-credentials", new RetrieveCredentialCommand(vaultService));
         commands.put("generate-password", new GeneratePasswordCommand(vaultService));
         commands.put("add-password",  new AddPasswordCommand(vaultService));
