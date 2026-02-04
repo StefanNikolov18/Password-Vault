@@ -5,9 +5,8 @@ import password.vault.server.algorithm.cipher.SymmetricBlockCipher;
 import password.vault.server.command.CommandResult;
 import password.vault.server.exception.CipherException;
 import password.vault.server.exception.EnzoicPasswordClientException;
-import password.vault.server.repository.EnzoicPasswordClient;
-import password.vault.server.repository.EnzoicPasswordResponse;
-import password.vault.server.repository.UserRepository;
+import password.vault.server.integration.enzoic.EnzoicPasswordClient;
+import password.vault.server.integration.enzoic.EnzoicPasswordResponse;
 import password.vault.server.utils.SecretKeyLoaderSingleton;
 import password.vault.server.utils.PasswordGenerator;
 
