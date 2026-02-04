@@ -1,4 +1,4 @@
-package password.vault.server.repository;
+package password.vault.server.integration.enzoic;
 
 public record EnzoicPasswordResponse(
         boolean revealedInExposure,

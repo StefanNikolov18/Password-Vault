@@ -1,4 +1,4 @@
-package password.vault.server.repository;
+package password.vault.server.integration.enzoic;
 
 import com.google.gson.Gson;
 import password.vault.server.algorithm.hashing.Sha256Hashing;
