@@ -1,6 +1,14 @@
 package password.vault.server.handler;
 
-import password.vault.server.command.*;
+import password.vault.server.command.Command;
+import password.vault.server.command.LoginCommand;
+import password.vault.server.command.RegisterCommand;
+import password.vault.server.command.RetrieveCredentialCommand;
+import password.vault.server.command.GeneratePasswordCommand;
+import password.vault.server.command.AddPasswordCommand;
+import password.vault.server.command.RemovePasswordCommand;
+import password.vault.server.command.CommandResult;
+
 import password.vault.server.repository.UserRepository;
 import password.vault.server.service.auth.AuthenticationService;
 import password.vault.server.service.vault.VaultService;
