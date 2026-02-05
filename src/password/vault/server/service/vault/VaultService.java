@@ -16,18 +16,16 @@ import java.io.IOException;
 // for add/retrieve/remove/generate passwords
 public class VaultService {
 
-    private SymmetricBlockCipher cipher;
+    private final SymmetricBlockCipher cipher;
 
-    private VaultRepository vaultRepo;
-    private EnzoicPasswordClient enzoicClient;
+    private final VaultRepository vaultRepo = new VaultRepository();
+    private final EnzoicPasswordClient  enzoicClient = new EnzoicPasswordClient();
 
     public VaultService() throws IOException {
 
         SecretKey key = SecretKeyLoaderSingleton.getInstance().getSecretKey();
         this.cipher =  CipherFactory.getCipher("AES", key);
 
-        vaultRepo = new VaultRepository();
-        enzoicClient = new EnzoicPasswordClient();
     }
 
     public CommandResult retrieveCredentials(

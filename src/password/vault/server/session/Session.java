@@ -1,7 +1,7 @@
 package password.vault.server.session;
 
 public class Session {
-    private static final long TIMEOUT = 10_000; //1 minute
+    private static final long TIMEOUT = 60_000; //1 minute
 
     private long lastActivity;
 
