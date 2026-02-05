@@ -12,6 +12,7 @@ import password.vault.server.command.CommandResult;
 import password.vault.server.repository.UserRepository;
 import password.vault.server.service.auth.AuthenticationService;
 import password.vault.server.service.vault.VaultService;
+import password.vault.server.session.Session;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -21,6 +22,8 @@ import java.util.Map;
 public class CommandHandler {
     private final Map<String, Command> commands = new HashMap<>();
     private String currentUser = null;
+
+    private final Session loginSession = new Session();
 
     public CommandHandler(UserRepository userRepository) throws IOException {
         if (userRepository == null) {
@@ -47,12 +50,8 @@ public class CommandHandler {
         String cmd = parts[0];
         String[] args = Arrays.copyOfRange(parts, 1, parts.length);
 
-        if (cmd.equals("logout")) {
-            if (currentUser == null) {
-                return "You are not logged in";
-            }
-            currentUser = null;
-            return "Logout successful.";
+        if (cmd.equals("logout")) { // logout
+            return logout();
         }
 
         Command command = commands.get(cmd);
@@ -60,12 +59,34 @@ public class CommandHandler {
             return "Unknown command: " + cmd + "! Type help for more information.";
         }
 
-        CommandResult result = command.execute(args, currentUser); //given parameters and currentUser
-        if (result.newUser() != null) {
-            currentUser = result.newUser();
+        if (isSessionExpired()) {
+            currentUser = null;
+            return "Session has expired. Please login again.";
         }
+        loginSession.refreshSession();
+        CommandResult result = command.execute(args, currentUser); //given parameters and currentUser
+        handleLogin(cmd, result.newUser());
 
         return result.message();
+    }
+
+    private boolean isSessionExpired() {
+        return currentUser != null && loginSession.isSessionExpired();
+    }
+
+    private String logout() {
+        if (currentUser == null) {
+            return "You are not logged in";
+        }
+        currentUser = null;
+        return "Logout successful.";
+    }
+
+    private void handleLogin(String cmd, String username) {
+        if ("login".equals(cmd) && username != null) {
+            loginSession.startSession();
+            currentUser = username;
+        }
     }
 
 }
