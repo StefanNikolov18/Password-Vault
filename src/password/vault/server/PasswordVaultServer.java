@@ -42,7 +42,6 @@ public class PasswordVaultServer {
 
         } catch (IOException e) {
             System.err.println("Server error occurred. Check logs.");
-            // Logger.log(e);
         } finally {
             executor.shutdown();
         }

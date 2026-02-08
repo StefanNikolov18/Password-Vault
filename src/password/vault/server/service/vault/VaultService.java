@@ -46,7 +46,7 @@ public class VaultService {
 
             return new CommandResult(currentUser, decryptedPassword);
         } catch (IOException | CipherException e) {
-            return new CommandResult(currentUser, "Problem finding your password for " + website);
+            throw new RuntimeException("Failed to retrieve credentials for " + currentUser, e);
         }
 
     }
@@ -77,8 +77,7 @@ public class VaultService {
             return new CommandResult(currentUser, vaultResult.message());
 
         } catch ( IOException | CipherException | EnzoicPasswordClientException ex) {
-            return new CommandResult(currentUser,
-                    "Problem adding your password for " + website);
+            throw new RuntimeException("Failed to add password for " + currentUser, ex);
         }
 
     }
@@ -97,8 +96,7 @@ public class VaultService {
 
             return new CommandResult(currentUser, genPassword);
         } catch (CipherException | IOException ex) {
-            return new CommandResult(currentUser,
-                    "Problem generating your password for " + website);
+            throw new RuntimeException("Failed to generate password for " + currentUser, ex);
         }
 
     }
@@ -114,7 +112,7 @@ public class VaultService {
 
             return new CommandResult(currentUser, result.message());
         } catch (IOException ex) {
-            return new CommandResult(currentUser, "Problem removing your password for " + website);
+            throw new RuntimeException("Failed to remove password for " + currentUser, ex);
         }
     }
 

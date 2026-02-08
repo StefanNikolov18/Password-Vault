@@ -43,7 +43,7 @@ public class CommandHandler {
 
     public String execute(String commandLine) {
         if (commandLine == null || commandLine.isBlank()) {
-            throw new IllegalArgumentException("commandLine cannot be null");
+            throw new IllegalArgumentException("CommandLine cannot be null or blank!");
         }
 
         String[] parts = commandLine.split(" ");

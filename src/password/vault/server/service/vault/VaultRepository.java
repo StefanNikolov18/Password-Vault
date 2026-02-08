@@ -12,14 +12,18 @@ import java.util.List;
 public class VaultRepository {
     private static final String VAULT_DIR_PATH = "data/vault/";
 
-    public VaultResponse getDecryptedPasswordForWebsite(String website, String usernameSite, String currentUser) throws IOException {
+    public VaultResponse getDecryptedPasswordForWebsite(
+            String website,
+            String usernameSite,
+            String currentUser) throws IOException {
         if (currentUser == null || website == null) {
             throw  new IllegalArgumentException("CurrentUser and Website are mandatory!");
         }
-
-        List<String> vaultUser =  getFromVaultFile(currentUser);
-        if (vaultUser == null) {
-            return new VaultResponse(false, "Server problem while reading vault file!");
+        List<String> vaultUser;
+        try {
+            vaultUser =  getFromVaultFile(currentUser);
+        } catch (IOException e) {
+            throw  new IOException("Error while reading vault file for " + currentUser + "!", e);
         }
 
         String decryptedPasswordForWebsite = vaultUser.stream()
@@ -35,15 +39,14 @@ public class VaultRepository {
         return new VaultResponse(true, decryptedPasswordForWebsite);
     }
 
-    private List<String> getFromVaultFile(String filename) {
+    private List<String> getFromVaultFile(String filename) throws IOException {
         List<String> list = new ArrayList<>();
 
         String pathname = VAULT_DIR_PATH + filename + ".vault";
         File file = new File(pathname);
 
         if (!file.exists()) {
-            System.out.println("Vault file does not exist: " + filename);
-            return null;
+            throw new IOException("File " + pathname + " doesn't exist!");
         }
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
@@ -51,9 +54,6 @@ public class VaultRepository {
             while ((line = br.readLine()) != null) {
                 list.add(line);
             }
-        } catch (IOException e) {
-            System.err.println("Error reading vault file: " + e.getMessage());
-            return null;
         }
 
         return list;
@@ -73,8 +73,6 @@ public class VaultRepository {
         final String path = VAULT_DIR_PATH + currentUser + ".vault";
         try (FileWriter fw = new FileWriter(path, true)) { // 'true' = append
             fw.write(website + " " + usernameWebsite + " " + cryptedPassword + System.lineSeparator());
-        } catch (IOException e) {
-            return new VaultResponse(false, "Error writing vault file!");
         }
 
         return new VaultResponse(true,
@@ -82,14 +80,17 @@ public class VaultRepository {
                         " with username: " + usernameWebsite);
     }
 
-    public VaultResponse removePassword(String website, String usernameWebsite, String currentUser) throws IOException {
+    public VaultResponse removePassword(String website,
+                                        String usernameWebsite,
+                                        String currentUser) throws IOException {
         if (currentUser == null || website == null ||  usernameWebsite == null) {
             throw  new IllegalArgumentException("CurrentUse, Website, password are mandatory!");
         }
-
-        List<String> vaultUser =  getFromVaultFile(currentUser);
-        if (vaultUser == null) {
-            return new VaultResponse(false, "Server problem while reading vault file!");
+        List<String> vaultUser;
+        try {
+            vaultUser = getFromVaultFile(currentUser);
+        } catch (IOException e) {
+            throw  new IOException("Error while reading vault file!", e);
         }
 
         List<String> result = vaultUser.stream() //remove line with website and username
@@ -101,8 +102,6 @@ public class VaultRepository {
             for (String line: result) {
                 fw.write(line +  System.lineSeparator());
             }
-        } catch (IOException e) {
-            return new VaultResponse(false, "Error writing vault file!");
         }
 
         return new VaultResponse(true, "Password successfully removed from vault!");

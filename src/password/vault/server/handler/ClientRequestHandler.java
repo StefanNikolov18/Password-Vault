@@ -1,6 +1,7 @@
 package password.vault.server.handler;
 
 import password.vault.server.repository.UserRepository;
+import password.vault.server.utils.ErrorLogger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,7 +20,6 @@ public class ClientRequestHandler implements Runnable {
 
     @Override
     public void run() {
-
         Thread.currentThread().setName("Client Request Handler for " + socket.getRemoteSocketAddress());
 
         try (PrintWriter out = new PrintWriter(socket.getOutputStream(), true); // autoflush on
@@ -31,20 +31,31 @@ public class ClientRequestHandler implements Runnable {
             String commandLine;
             while ((commandLine = in.readLine()) != null) { // read the message from the client
                 System.out.println("Message received from client: " + commandLine);
-
-                if (commandLine.equalsIgnoreCase("disconnect")) {
-                    out.println("disconnect"); // to the client
-                    System.out.println("Disconnected from client " + socket.getRemoteSocketAddress());
+                if (isDisconnect(commandLine, out)) {
                     break;
                 }
-
-                String message = cmdHandler.execute(commandLine);
-                out.println(message); // send response back to the client
+                try {
+                    String message = cmdHandler.execute(commandLine);
+                    out.println(message); // send response back to the client
+                } catch (Exception e) {
+                    System.out.println("Error handling client " + socket.getRemoteSocketAddress()
+                            + ": " + e.getMessage());
+                    ErrorLogger.log(e, socket.getRemoteSocketAddress().toString()); // every exception from cmdHandler
+                    out.println("An unexpected error occurred. " +
+                            "Please try again later or contact support with the logs.");
+                }
             }
-
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+    }
 
+    private boolean isDisconnect(String commandLine, PrintWriter out) {
+        if (commandLine.equalsIgnoreCase("disconnect")) {
+            out.println("disconnect"); // to the client
+            System.out.println("Disconnected from client " + socket.getRemoteSocketAddress());
+            return true;
+        }
+        return false;
     }
 }

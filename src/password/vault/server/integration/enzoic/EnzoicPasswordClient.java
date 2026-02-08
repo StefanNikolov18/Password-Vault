@@ -54,9 +54,9 @@ public class EnzoicPasswordClient {
                         0);
             }
 
-            throw new EnzoicPasswordClientException("Enzoic client ended with status: " + status );
+            throw new EnzoicPasswordClientException("Enzoic client ended with status: " + status);
         } catch (Exception e) {
-            throw new EnzoicPasswordClientException("Client error: " + e.getMessage(), e.getCause());
+            throw new EnzoicPasswordClientException("Client error: " + e.getMessage(), e);
         }
     }
 

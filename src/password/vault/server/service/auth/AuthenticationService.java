@@ -34,7 +34,7 @@ public class AuthenticationService {
         }
 
         return new CommandResult( username,
-                "Registration successful. You are logged in.");
+                "Registration successful!");
     }
 
     public CommandResult login(String username, String password) {

@@ -19,8 +19,12 @@ public class UserRepository {
     private Map<String, String> users = new HashMap<>();
 
     public UserRepository(InputStream userInputStream) throws IOException {
-        UserLoader loader = new UserFileLoader(userInputStream);
-        this.users = loader.load();
+        try {
+            UserLoader loader = new UserFileLoader(userInputStream);
+            this.users = loader.load();
+        } catch (IOException e) {
+            throw new IOException("Failed to load users database", e);
+        }
         System.out.println("Users are loaded from database. -> " + users.size() + " users.");
     }
 
