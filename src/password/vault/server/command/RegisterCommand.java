@@ -8,11 +8,18 @@ public class RegisterCommand implements Command {
     private final AuthenticationService authService;
 
     public RegisterCommand(AuthenticationService authService) {
+        if (authService == null) {
+            throw new IllegalArgumentException("authService must not be null!");
+        }
         this.authService = authService;
     }
 
     @Override
     public CommandResult execute(String[] args, String currentUser) {
+        if (args == null) {
+            throw new IllegalArgumentException("args must not be null!");
+        }
+
         if (currentUser != null) {
             return new CommandResult(null,
                     "Already logged in as " + currentUser + "!");

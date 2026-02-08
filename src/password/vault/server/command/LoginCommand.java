@@ -8,11 +8,17 @@ public class LoginCommand implements Command {
     private final AuthenticationService authenticationService;
 
     public LoginCommand(AuthenticationService authenticationService) {
+        if (authenticationService == null) {
+            throw new IllegalArgumentException("AuthenticationService cannot be null!");
+        }
         this.authenticationService = authenticationService;
     }
 
     @Override
     public CommandResult execute(String[] args, String currentUser) {
+        if (args == null) {
+            throw new IllegalArgumentException("Arguments cannot be null!");
+        }
         if (currentUser != null) {
             return new CommandResult(null,
                     "Already logged in as " + currentUser + "!");

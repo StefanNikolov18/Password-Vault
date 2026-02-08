@@ -89,13 +89,18 @@ public class VaultRepository {
         List<String> vaultUser;
         try {
             vaultUser = getFromVaultFile(currentUser);
+
         } catch (IOException e) {
             throw  new IOException("Error while reading vault file!", e);
         }
 
+        int size = vaultUser.size();
         List<String> result = vaultUser.stream() //remove line with website and username
                 .filter(line -> (!line.startsWith(website) || !line.contains(usernameWebsite)))
                 .toList();
+        if (result.size() == size) {
+            return new VaultResponse(false, "No password found!");
+        }
 
         final String path = VAULT_DIR_PATH + currentUser + ".vault";
         try (FileWriter fw = new FileWriter(path)) {         // append == false

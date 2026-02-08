@@ -8,11 +8,17 @@ public class GeneratePasswordCommand implements Command {
     private final VaultService vaultService;
 
     public GeneratePasswordCommand(VaultService vaultService) {
+        if (vaultService == null) {
+            throw new IllegalArgumentException("VaultService cannot be null!");
+        }
         this.vaultService = vaultService;
     }
 
     @Override
     public CommandResult execute(String[] args, String currentUser) {
+        if (args == null) {
+            throw new IllegalArgumentException("Arguments cannot be null!");
+        }
         if (currentUser == null) {
             return new CommandResult(null, "You need to login first!");
         }

@@ -18,4 +18,15 @@ public class Session {
         return (now - lastActivity) > TIMEOUT;
     }
 
+    public long getLastActivity() {
+        return lastActivity;
+    }
+
+    public void setLastActivity(long lastActivity) {
+        this.lastActivity = lastActivity;
+    }
+
+    public static long getTIMEOUT() {
+        return TIMEOUT;
+    }
 }

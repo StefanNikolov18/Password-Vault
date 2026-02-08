@@ -8,11 +8,18 @@ public class RetrieveCredentialCommand implements Command {
     private final VaultService vaultService;
 
     public RetrieveCredentialCommand(VaultService vaultService) {
+        if (vaultService == null) {
+            throw new IllegalArgumentException("Vault Service cannot be null!");
+        }
         this.vaultService = vaultService;
     }
 
     @Override
     public CommandResult execute(String[] args, String currentUser) {
+        if (args == null) {
+            throw new IllegalArgumentException("Args cannot be null!");
+        }
+
         if (currentUser == null) {
             return new CommandResult(null, "You need to login first!");
         }

@@ -89,7 +89,7 @@ public class VaultService {
         }
 
         try {
-            String genPassword = PasswordGenerator.generatePassword();
+            String genPassword = PasswordGenerator.generatePassword(enzoicClient); // throws
             String cryptedPassword = cipher.encrypt(genPassword);
             VaultResponse vaultResult = vaultRepo.addNewPasswordForWebsite(
                     website, usernameSite, cryptedPassword, currentUser);

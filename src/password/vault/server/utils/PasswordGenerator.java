@@ -1,24 +1,41 @@
 package password.vault.server.utils;
 
+import password.vault.server.exception.EnzoicPasswordClientException;
+import password.vault.server.integration.enzoic.EnzoicPasswordClient;
+import password.vault.server.integration.enzoic.EnzoicPasswordResponse;
+
 import java.security.SecureRandom;
 
 public class PasswordGenerator {
     private static final String CHARSET =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
     private static final int PASSWORD_LENGTH = 22;
+    private static final int MAX_ATTEMPTS =  10;
 
     private PasswordGenerator() {
 
     }
 
-    public static String generatePassword() {
+    public static String generatePassword(EnzoicPasswordClient enzoicPasswordClient) {
         SecureRandom random = new SecureRandom();
-        StringBuilder sb = new StringBuilder(PASSWORD_LENGTH);
-        for (int i = 0; i < PASSWORD_LENGTH; i++) {
-            int index = random.nextInt(CHARSET.length());
-            sb.append(CHARSET.charAt(index));
+        for (int attempt = 1; attempt <= MAX_ATTEMPTS; ++attempt) {
+            StringBuilder sb = new StringBuilder(PASSWORD_LENGTH); //local
+            for (int i = 0; i < PASSWORD_LENGTH; i++) {
+                int index = random.nextInt(CHARSET.length());
+                sb.append(CHARSET.charAt(index));
+            }
+
+            String password = sb.toString();
+            try {
+                EnzoicPasswordResponse response = enzoicPasswordClient.getResponse(password);
+                if (!response.revealedInExposure()) {            //true == isWeak
+                    return password;
+                }
+            } catch (EnzoicPasswordClientException e) {
+                throw new RuntimeException(e);
+            }
         }
 
-        return sb.toString();
+        throw new RuntimeException("Generating password was unsuccessful!");
     }
 }
