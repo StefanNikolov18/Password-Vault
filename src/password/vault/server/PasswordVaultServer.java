@@ -15,7 +15,7 @@ import java.util.concurrent.Executors;
 public class PasswordVaultServer {
 
     private static final int SERVER_PORT = 4444;
-    private static final int MAX_THREADS = 10;
+    private static final int MAX_THREADS = 11;
 
     static void main(String... args) {
         Thread.currentThread().setName("PasswordVaultServer-Main");
