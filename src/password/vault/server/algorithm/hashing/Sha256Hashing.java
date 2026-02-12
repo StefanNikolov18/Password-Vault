@@ -11,7 +11,6 @@ public class Sha256Hashing {
             throw new IllegalArgumentException("Password cannot be null!");
         }
 
-        String hashedGivenPassword;
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hashBytes = digest.digest(password.getBytes(StandardCharsets.UTF_8));

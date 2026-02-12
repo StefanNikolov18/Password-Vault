@@ -35,7 +35,7 @@ public class PasswordVaultClient {
             }
             System.out.println("Goodbye!");
         } catch (IOException e) {
-            throw new RuntimeException("There is a problem with the network communication", e);
+            System.err.println("Problem connecting to Password Vault server!");
         }
     }
 }

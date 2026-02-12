@@ -28,6 +28,14 @@ public class EnzoicPasswordClient {
         this.client = HttpClient.newHttpClient();
     }
 
+    //for testing with mocking
+    EnzoicPasswordClient(HttpClient enzoicClient)
+            throws IOException {
+        this.apiKey = EnzoicConfigSingleton.getInstance().getApiKey();
+        this.apiSecret = EnzoicConfigSingleton.getInstance().getApiSecret();
+        this.client = enzoicClient;
+    }
+
     public EnzoicPasswordResponse getResponse(String password)
             throws EnzoicPasswordClientException {
         if (password == null) {
@@ -60,7 +68,8 @@ public class EnzoicPasswordClient {
         }
     }
 
-    private URI buildUri(String password) throws EnzoicPasswordClientException {
+    private URI buildUri(String password)
+            throws EnzoicPasswordClientException {
         String sha256Password = Sha256Hashing.hashing(password);
 
         StringBuilder q = new StringBuilder(ENZOIC_BASE_URL);

@@ -56,11 +56,11 @@ public class CommandHandler {
 
         Command command = commands.get(cmd);
         if (command == null) {
-            return "Unknown command: " + cmd + "! Type help for more information.";
+            return "Unknown command: " + cmd + "!";
         }
 
         if (isSessionExpired()) {
-            currentUser = null;
+            setCurrentUser(null);
             return "Session has expired. Please login again.";
         }
         loginSession.refreshSession();
@@ -70,23 +70,34 @@ public class CommandHandler {
         return result.message();
     }
 
-    private boolean isSessionExpired() {
-        return currentUser != null && loginSession.isSessionExpired();
-    }
-
     private String logout() {
         if (currentUser == null) {
             return "You are not logged in";
         }
-        currentUser = null;
+        setCurrentUser(null);
         return "Logout successful.";
+    }
+
+    boolean isSessionExpired() {
+        return currentUser != null && loginSession.isSessionExpired();
     }
 
     private void handleLogin(String cmd, String username) {
         if ("login".equals(cmd) && username != null) {
             loginSession.startSession();
-            currentUser = username;
+            setCurrentUser(username);
         }
     }
 
+    public String getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(String currentUser) {
+        this.currentUser = currentUser;
+    }
+
+    Map<String, Command> getCommands() {
+        return commands;
+    }
 }

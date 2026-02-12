@@ -27,8 +27,7 @@ public class LoginCommand implements Command {
         if (args.length != LOGIN_NEEDED_ARGUMENTS) {
             return new CommandResult( null,
                     "Invalid command line! Must be given login " +
-                            "<username> <password> to login! " +
-                            "Type help for more information.");
+                            "<username> <password> to login! ");
         }
 
         String username = args[0];

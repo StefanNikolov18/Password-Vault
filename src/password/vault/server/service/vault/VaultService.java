@@ -10,7 +10,6 @@ import password.vault.server.integration.enzoic.EnzoicPasswordResponse;
 import password.vault.server.utils.SecretKeyLoaderSingleton;
 import password.vault.server.utils.PasswordGenerator;
 
-import javax.crypto.SecretKey;
 import java.io.IOException;
 
 // for add/retrieve/remove/generate passwords
@@ -18,14 +17,24 @@ public class VaultService {
 
     private final SymmetricBlockCipher cipher;
 
-    private final VaultRepository vaultRepo = new VaultRepository();
-    private final EnzoicPasswordClient  enzoicClient = new EnzoicPasswordClient();
+    private final VaultRepository vaultRepo;
+    private final EnzoicPasswordClient enzoicClient;
 
     public VaultService() throws IOException {
+        this(new VaultRepository(),
+                new EnzoicPasswordClient(),
+                CipherFactory.getCipher(
+                        "AES",
+                        SecretKeyLoaderSingleton.getInstance().getSecretKey())
+        );
+    }
 
-        SecretKey key = SecretKeyLoaderSingleton.getInstance().getSecretKey();
-        this.cipher =  CipherFactory.getCipher("AES", key);
-
+    VaultService(VaultRepository repo,
+                 EnzoicPasswordClient client,
+                 SymmetricBlockCipher cipher) {
+        this.vaultRepo = repo;
+        this.enzoicClient = client;
+        this.cipher = cipher;
     }
 
     public CommandResult retrieveCredentials(
@@ -95,7 +104,7 @@ public class VaultService {
                     website, usernameSite, cryptedPassword, currentUser);
 
             return new CommandResult(currentUser, genPassword);
-        } catch (CipherException | IOException ex) {
+        } catch (EnzoicPasswordClientException | CipherException | IOException ex) {
             throw new RuntimeException("Failed to generate password for " + currentUser, ex);
         }
 

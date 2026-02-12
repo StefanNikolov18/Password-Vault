@@ -16,7 +16,7 @@ public class VaultRepository {
             String website,
             String usernameSite,
             String currentUser) throws IOException {
-        if (currentUser == null || website == null) {
+        if (currentUser == null || website ==  null || usernameSite == null) {
             throw  new IllegalArgumentException("CurrentUser and Website are mandatory!");
         }
         List<String> vaultUser;
@@ -39,7 +39,7 @@ public class VaultRepository {
         return new VaultResponse(true, decryptedPasswordForWebsite);
     }
 
-    private List<String> getFromVaultFile(String filename) throws IOException {
+    List<String> getFromVaultFile(String filename) throws IOException {
         List<String> list = new ArrayList<>();
 
         String pathname = VAULT_DIR_PATH + filename + ".vault";
@@ -65,7 +65,10 @@ public class VaultRepository {
             String cryptedPassword,
             String currentUser) throws IOException {
 
-        if (currentUser == null || website == null ||  usernameWebsite == null || cryptedPassword == null) {
+        if (currentUser == null
+                || website == null
+                ||  usernameWebsite == null
+                || cryptedPassword == null) {
             throw  new IllegalArgumentException("CurrentUse, Website, password, usernameWebsite are mandatory!");
         }
 

@@ -44,7 +44,7 @@ public class UserRepository {
         createVaultFile(username);
     }
 
-    private void saveInDataBase(String username, String hashPassword) throws IOException {
+    void saveInDataBase(String username, String hashPassword) throws IOException {
         String newUserLine = username + ":" + hashPassword;
         try (FileWriter fw = new FileWriter(USERS_PATH, true)) { // 'true' = append
             fw.write(newUserLine + System.lineSeparator());
@@ -52,7 +52,7 @@ public class UserRepository {
         }
     }
 
-    private void createVaultFile(String username) throws IOException {
+    void createVaultFile(String username) throws IOException {
         String newFileName = username + ".vault";
         Path path = Path.of(VAULT_DIR_PATH, newFileName);
 

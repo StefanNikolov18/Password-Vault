@@ -28,7 +28,7 @@ public class RegisterCommand implements Command {
         if (args.length != REGISTER_NEEDED_ARGUMENTS) {
             return new CommandResult(null,
                     "Invalid command line arguments! Must be given register <username>" +
-                            " <password> <repeat-password>! Type help for more information.");
+                            " <password> <repeat-password>!");
         } else if (!args[1].equals(args[2])) {
             return new CommandResult(null,
                     "Passwords don't match! Please try again.");

@@ -12,6 +12,9 @@ public class AuthenticationService {
     private final UserRepository userRepository;
 
     public AuthenticationService(UserRepository userRepository) {
+        if (userRepository == null) {
+            throw new IllegalArgumentException("userRepository cannot be null!");
+        }
         this.userRepository = userRepository;
     }
 

@@ -16,7 +16,8 @@ public class PasswordGenerator {
 
     }
 
-    public static String generatePassword(EnzoicPasswordClient enzoicPasswordClient) {
+    public static String generatePassword(EnzoicPasswordClient enzoicPasswordClient)
+        throws EnzoicPasswordClientException {
         SecureRandom random = new SecureRandom();
         for (int attempt = 1; attempt <= MAX_ATTEMPTS; ++attempt) {
             StringBuilder sb = new StringBuilder(PASSWORD_LENGTH); //local
@@ -26,14 +27,11 @@ public class PasswordGenerator {
             }
 
             String password = sb.toString();
-            try {
-                EnzoicPasswordResponse response = enzoicPasswordClient.getResponse(password);
-                if (!response.revealedInExposure()) {            //true == isWeak
-                    return password;
-                }
-            } catch (EnzoicPasswordClientException e) {
-                throw new RuntimeException(e);
+            EnzoicPasswordResponse response = enzoicPasswordClient.getResponse(password);
+            if (!response.revealedInExposure()) {            //true == isWeak
+                return password;
             }
+
         }
 
         throw new RuntimeException("Generating password was unsuccessful!");

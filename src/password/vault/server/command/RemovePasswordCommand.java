@@ -25,8 +25,7 @@ public class RemovePasswordCommand implements Command {
 
         if (args.length != REMOVE_PASSWORD_NEEDED_ARGUMENTS) {
             return new CommandResult(currentUser, "Invalid arguments! "
-                    + "Must be given remove-password <website> <username>"
-                    + "Type help for more information.");
+                    + "Must be given remove-password <website> <username>!");
         }
 
         String website = args[0];
