@@ -3,7 +3,6 @@ package password.vault.server.integration.enzoic;
 import com.google.gson.Gson;
 import password.vault.server.algorithm.hashing.Sha256Hashing;
 import password.vault.server.exception.EnzoicPasswordClientException;
-import password.vault.server.utils.EnzoicConfigSingleton;
 
 import java.io.IOException;
 import java.net.URI;
@@ -21,19 +20,15 @@ public class EnzoicPasswordClient {
     private final HttpClient client;
     private static final Gson GSON = new Gson();
 
-    public EnzoicPasswordClient() throws IOException {
-        this.apiKey = EnzoicConfigSingleton.getInstance().getApiKey();
-        this.apiSecret = EnzoicConfigSingleton.getInstance().getApiSecret();
-
-        this.client = HttpClient.newHttpClient();
-    }
-
-    //for testing with mocking
-    EnzoicPasswordClient(HttpClient enzoicClient)
+    public EnzoicPasswordClient(String apiKey,
+                                String apiSecret,
+                                HttpClient httpClient)
             throws IOException {
-        this.apiKey = EnzoicConfigSingleton.getInstance().getApiKey();
-        this.apiSecret = EnzoicConfigSingleton.getInstance().getApiSecret();
-        this.client = enzoicClient;
+
+        this.apiKey = apiKey;
+        this.apiSecret = apiSecret;
+
+        this.client = httpClient;
     }
 
     public EnzoicPasswordResponse getResponse(String password)

@@ -1,6 +1,7 @@
 package password.vault.server.utils;
 
 import org.junit.jupiter.api.Test;
+import password.vault.server.algorithm.PasswordGenerator;
 import password.vault.server.integration.enzoic.EnzoicPasswordClient;
 import password.vault.server.integration.enzoic.EnzoicPasswordResponse;
 

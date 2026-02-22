@@ -8,8 +8,7 @@ import password.vault.server.exception.CipherException;
 import password.vault.server.exception.EnzoicPasswordClientException;
 import password.vault.server.integration.enzoic.EnzoicPasswordClient;
 import password.vault.server.integration.enzoic.EnzoicPasswordResponse;
-import password.vault.server.utils.PasswordGenerator;
-import password.vault.server.utils.SecretKeyLoaderSingleton;
+import password.vault.server.algorithm.PasswordGenerator;
 
 import java.io.IOException;
 

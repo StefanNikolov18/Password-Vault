@@ -1,4 +1,4 @@
-package password.vault.server.utils;
+package password.vault.server.algorithm;
 
 import password.vault.server.exception.EnzoicPasswordClientException;
 import password.vault.server.integration.enzoic.EnzoicPasswordClient;

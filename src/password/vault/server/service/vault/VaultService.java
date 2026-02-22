@@ -7,8 +7,10 @@ import password.vault.server.exception.CipherException;
 import password.vault.server.exception.EnzoicPasswordClientException;
 import password.vault.server.integration.enzoic.EnzoicPasswordClient;
 import password.vault.server.integration.enzoic.EnzoicPasswordResponse;
-import password.vault.server.utils.SecretKeyLoaderSingleton;
-import password.vault.server.utils.PasswordGenerator;
+import password.vault.server.algorithm.PasswordGenerator;
+import password.vault.server.provider.EnzoicKeyProvider;
+import password.vault.server.provider.HttpClientProvider;
+import password.vault.server.provider.SecretKeyProvider;
 
 import java.io.IOException;
 
@@ -21,11 +23,17 @@ public class VaultService {
     private final EnzoicPasswordClient enzoicClient;
 
     public VaultService() throws IOException {
+        SecretKeyProvider keyProvider = new SecretKeyProvider();
+        EnzoicKeyProvider enzoicProvider = new EnzoicKeyProvider();
+
         this(new VaultRepository(),
-                new EnzoicPasswordClient(),
+                new EnzoicPasswordClient(
+                        enzoicProvider.getApiKey(),
+                        enzoicProvider.getApiSecret(),
+                        HttpClientProvider.getClient()),
                 CipherFactory.getCipher(
                         "AES",
-                        SecretKeyLoaderSingleton.getInstance().getSecretKey())
+                        keyProvider.getSecretKey())
         );
     }
 
