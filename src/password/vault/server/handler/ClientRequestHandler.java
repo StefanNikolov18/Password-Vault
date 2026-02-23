@@ -36,7 +36,7 @@ public class ClientRequestHandler implements Runnable {
                 }
                 try {
                     String message = cmdHandler.execute(commandLine);
-                    out.println(message); // send response back to the client
+                    sendMessage(message, out);  // send response back to the client
                 } catch (Exception e) {
                     System.out.println("Error handling client " + socket.getRemoteSocketAddress()
                             + ": " + e.getMessage());
@@ -57,5 +57,11 @@ public class ClientRequestHandler implements Runnable {
             return true;
         }
         return false;
+    }
+
+    private void sendMessage(String message, PrintWriter out) {
+        out.print(message);
+        out.print("\nEND\n");
+        out.flush();
     }
 }

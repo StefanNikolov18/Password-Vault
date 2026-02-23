@@ -1,5 +1,7 @@
-package password.vault.server.command;
+package password.vault.server.command.unauthenticated;
 
+import password.vault.server.command.Command;
+import password.vault.server.command.CommandResult;
 import password.vault.server.service.auth.AuthenticationService;
 
 public class RegisterCommand implements Command {

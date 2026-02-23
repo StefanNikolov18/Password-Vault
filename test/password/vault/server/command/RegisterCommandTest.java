@@ -1,6 +1,7 @@
 package password.vault.server.command;
 
 import org.junit.jupiter.api.Test;
+import password.vault.server.command.unauthenticated.RegisterCommand;
 import password.vault.server.service.auth.AuthenticationService;
 
 import static org.junit.jupiter.api.Assertions.*;

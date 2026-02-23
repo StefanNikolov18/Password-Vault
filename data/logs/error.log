@@ -2,7 +2,7 @@ Time: 1770571235952
 User: /127.0.0.1:63925
 java.lang.RuntimeException: Failed to retrieve credentials
 	at password.vault.server.service.vault.VaultService.retrieveCredentials(VaultService.java:49)
-	at password.vault.server.command.RetrieveCredentialCommand.execute(RetrieveCredentialCommand.java:29)
+	at password.vault.server.command.authenticated.RetrieveCredentialCommand.execute(RetrieveCredentialCommand.java:29)
 	at password.vault.server.handler.CommandHandler.execute(CommandHandler.java:67)
 	at password.vault.server.handler.ClientRequestHandler.run(ClientRequestHandler.java:39)
 	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
@@ -22,7 +22,7 @@ User: /127.0.0.1:53035
 Exception: java.lang.RuntimeException
 java.lang.RuntimeException: Failed to remove password for pesho
 	at password.vault.server.service.vault.VaultService.removePassword(VaultService.java:115)
-	at password.vault.server.command.RemovePasswordCommand.execute(RemovePasswordCommand.java:29)
+	at password.vault.server.command.authenticated.RemovePasswordCommand.execute(RemovePasswordCommand.java:29)
 	at password.vault.server.handler.CommandHandler.execute(CommandHandler.java:67)
 	at password.vault.server.handler.ClientRequestHandler.run(ClientRequestHandler.java:38)
 	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
@@ -125,7 +125,7 @@ User: /127.0.0.1:49690
 Exception: java.lang.RuntimeException
 java.lang.RuntimeException: Failed to add password for stefan
 	at password.vault.server.service.vault.VaultService.addPassword(VaultService.java:89)
-	at password.vault.server.command.AddPasswordCommand.execute(AddPasswordCommand.java:37)
+	at password.vault.server.command.authenticated.AddPasswordCommand.execute(AddPasswordCommand.java:37)
 	at password.vault.server.handler.CommandHandler.execute(CommandHandler.java:67)
 	at password.vault.server.handler.ClientRequestHandler.run(ClientRequestHandler.java:38)
 	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
@@ -304,4 +304,104 @@ java.lang.RuntimeException: Test exception
 	at com.intellij.rt.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:35)
 	at com.intellij.rt.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:237)
 	at com.intellij.rt.junit.JUnitStarter.main(JUnitStarter.java:58)
+----
+Time: 1771861857848
+User: /127.0.0.1:34784
+Exception: java.lang.NullPointerException
+java.lang.NullPointerException: Cannot read field "command" because "cmdInfo" is null
+	at password.vault.server.handler.CommandHandler.execute(CommandHandler.java:71)
+	at password.vault.server.handler.ClientRequestHandler.run(ClientRequestHandler.java:38)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+----
+Time: 1771861858556
+User: /127.0.0.1:34784
+Exception: java.lang.NullPointerException
+java.lang.NullPointerException: Cannot read field "command" because "cmdInfo" is null
+	at password.vault.server.handler.CommandHandler.execute(CommandHandler.java:71)
+	at password.vault.server.handler.ClientRequestHandler.run(ClientRequestHandler.java:38)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+----
+Time: 1771861859159
+User: /127.0.0.1:34784
+Exception: java.lang.NullPointerException
+java.lang.NullPointerException: Cannot read field "command" because "cmdInfo" is null
+	at password.vault.server.handler.CommandHandler.execute(CommandHandler.java:71)
+	at password.vault.server.handler.ClientRequestHandler.run(ClientRequestHandler.java:38)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+----
+Time: 1771861859742
+User: /127.0.0.1:34784
+Exception: java.lang.NullPointerException
+java.lang.NullPointerException: Cannot read field "command" because "cmdInfo" is null
+	at password.vault.server.handler.CommandHandler.execute(CommandHandler.java:71)
+	at password.vault.server.handler.ClientRequestHandler.run(ClientRequestHandler.java:38)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+----
+Time: 1771861860277
+User: /127.0.0.1:34784
+Exception: java.lang.NullPointerException
+java.lang.NullPointerException: Cannot read field "command" because "cmdInfo" is null
+	at password.vault.server.handler.CommandHandler.execute(CommandHandler.java:71)
+	at password.vault.server.handler.ClientRequestHandler.run(ClientRequestHandler.java:38)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+----
+Time: 1771861860966
+User: /127.0.0.1:34784
+Exception: java.lang.NullPointerException
+java.lang.NullPointerException: Cannot read field "command" because "cmdInfo" is null
+	at password.vault.server.handler.CommandHandler.execute(CommandHandler.java:71)
+	at password.vault.server.handler.ClientRequestHandler.run(ClientRequestHandler.java:38)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+----
+Time: 1771861861587
+User: /127.0.0.1:34784
+Exception: java.lang.NullPointerException
+java.lang.NullPointerException: Cannot read field "command" because "cmdInfo" is null
+	at password.vault.server.handler.CommandHandler.execute(CommandHandler.java:71)
+	at password.vault.server.handler.ClientRequestHandler.run(ClientRequestHandler.java:38)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+----
+Time: 1771861862205
+User: /127.0.0.1:34784
+Exception: java.lang.NullPointerException
+java.lang.NullPointerException: Cannot read field "command" because "cmdInfo" is null
+	at password.vault.server.handler.CommandHandler.execute(CommandHandler.java:71)
+	at password.vault.server.handler.ClientRequestHandler.run(ClientRequestHandler.java:38)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+----
+Time: 1771862252951
+User: /127.0.0.1:43840
+Exception: java.lang.NullPointerException
+java.lang.NullPointerException: Cannot read field "command" because "cmdInfo" is null
+	at password.vault.server.handler.CommandHandler.execute(CommandHandler.java:71)
+	at password.vault.server.handler.ClientRequestHandler.run(ClientRequestHandler.java:38)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+----
+Time: 1771862255684
+User: /127.0.0.1:43840
+Exception: java.lang.NullPointerException
+java.lang.NullPointerException: Cannot read field "command" because "cmdInfo" is null
+	at password.vault.server.handler.CommandHandler.execute(CommandHandler.java:71)
+	at password.vault.server.handler.ClientRequestHandler.run(ClientRequestHandler.java:38)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
 ----

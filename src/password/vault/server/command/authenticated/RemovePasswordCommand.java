@@ -1,15 +1,17 @@
-package password.vault.server.command;
+package password.vault.server.command.authenticated;
 
+import password.vault.server.command.Command;
+import password.vault.server.command.CommandResult;
 import password.vault.server.service.vault.VaultService;
 
-public class RetrieveCredentialCommand implements Command {
-    private static final int RETRIEVE_CREDENTIAL_NEEDED_ARGUMENTS = 2;
+public class RemovePasswordCommand implements Command {
+    private static final int REMOVE_PASSWORD_NEEDED_ARGUMENTS = 2;
 
     private final VaultService vaultService;
 
-    public RetrieveCredentialCommand(VaultService vaultService) {
+    public RemovePasswordCommand(VaultService vaultService) {
         if (vaultService == null) {
-            throw new IllegalArgumentException("Vault Service cannot be null!");
+            throw new IllegalArgumentException("VaultService cannot be null!");
         }
         this.vaultService = vaultService;
     }
@@ -19,20 +21,18 @@ public class RetrieveCredentialCommand implements Command {
         if (args == null) {
             throw new IllegalArgumentException("Args cannot be null!");
         }
-
         if (currentUser == null) {
             return new CommandResult(null, "You need to login first!");
         }
 
-        if (args.length != RETRIEVE_CREDENTIAL_NEEDED_ARGUMENTS) {
+        if (args.length != REMOVE_PASSWORD_NEEDED_ARGUMENTS) {
             return new CommandResult(currentUser, "Invalid arguments! "
-                    + "Must be given retrieve-credential <website> <username>"
-                    + "Please try again.");
+                    + "Must be given remove-password <website> <username>!");
         }
 
         String website = args[0];
         String usernameSite = args[1];
 
-        return vaultService.retrieveCredentials(website, usernameSite , currentUser);
+        return vaultService.removePassword(website, usernameSite, currentUser);
     }
 }

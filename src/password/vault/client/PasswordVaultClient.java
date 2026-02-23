@@ -26,17 +26,35 @@ public class PasswordVaultClient {
 
                 writer.println(command); // send the message to the server
 
-                String serverReply = reader.readLine(); // read the response from the server
+                String serverReply = readServerReply(reader);
+
                 if (serverReply == null || serverReply.equalsIgnoreCase("disconnect")) {
                     break;
                 }
                 System.out.println(serverReply);
-                System.out.println();
             }
             System.out.println("Goodbye!");
         } catch (IOException e) {
             System.err.println("Problem connecting to Password Vault server!");
         }
+    }
+
+    private static String readServerReply(BufferedReader reader) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        String line;
+        boolean receivedSmt = false;
+
+        while ((line = reader.readLine()) != null) {
+            receivedSmt = true;
+            if (line.equals("END")) break;
+            sb.append(line).append("\n");
+        }
+
+        if (!receivedSmt) {
+            return null; // connection closed
+        }
+
+        return sb.toString().trim();
     }
 }
 

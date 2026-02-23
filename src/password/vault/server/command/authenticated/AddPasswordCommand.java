@@ -1,5 +1,7 @@
-package password.vault.server.command;
+package password.vault.server.command.authenticated;
 
+import password.vault.server.command.Command;
+import password.vault.server.command.CommandResult;
 import password.vault.server.service.vault.VaultService;
 
 public class AddPasswordCommand implements Command {

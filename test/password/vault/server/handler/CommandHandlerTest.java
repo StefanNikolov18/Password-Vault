@@ -3,7 +3,7 @@ package password.vault.server.handler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import password.vault.server.command.CommandResult;
-import password.vault.server.command.LoginCommand;
+import password.vault.server.command.unauthenticated.LoginCommand;
 import password.vault.server.repository.UserRepository;
 
 import java.io.IOException;

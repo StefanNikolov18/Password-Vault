@@ -1,12 +1,13 @@
 package password.vault.server.handler;
 
 import password.vault.server.command.Command;
-import password.vault.server.command.LoginCommand;
-import password.vault.server.command.RegisterCommand;
-import password.vault.server.command.RetrieveCredentialCommand;
-import password.vault.server.command.GeneratePasswordCommand;
-import password.vault.server.command.AddPasswordCommand;
-import password.vault.server.command.RemovePasswordCommand;
+import password.vault.server.command.unauthenticated.HelpCommand;
+import password.vault.server.command.unauthenticated.LoginCommand;
+import password.vault.server.command.unauthenticated.RegisterCommand;
+import password.vault.server.command.authenticated.RetrieveCredentialCommand;
+import password.vault.server.command.authenticated.GeneratePasswordCommand;
+import password.vault.server.command.authenticated.AddPasswordCommand;
+import password.vault.server.command.authenticated.RemovePasswordCommand;
 import password.vault.server.command.CommandResult;
 
 import password.vault.server.repository.UserRepository;
@@ -20,7 +21,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CommandHandler {
-    private final Map<String, Command> commands = new HashMap<>();
+
+    private static class CommandInfo {
+        Command command;
+        boolean requiresAuth;
+
+        CommandInfo(Command command, boolean requiresAuth) {
+            this.command = command;
+            this.requiresAuth = requiresAuth;
+        }
+    }
+
+    private final Map<String, CommandInfo> commands = new HashMap<>();
     private String currentUser = null;
 
     private final Session loginSession = new Session();
@@ -31,14 +43,15 @@ public class CommandHandler {
         }
 
         AuthenticationService authService = new AuthenticationService(userRepository);
-        commands.put("register", new RegisterCommand(authService));
-        commands.put("login", new LoginCommand(authService));
+        commands.put("register", new CommandInfo(new RegisterCommand(authService), false));
+        commands.put("login", new CommandInfo(new LoginCommand(authService), false));
+        commands.put("help", new CommandInfo(new HelpCommand(), false));
 
         VaultService vaultService = new VaultService();
-        commands.put("retrieve-credentials", new RetrieveCredentialCommand(vaultService));
-        commands.put("generate-password", new GeneratePasswordCommand(vaultService));
-        commands.put("add-password",  new AddPasswordCommand(vaultService));
-        commands.put("remove-password", new RemovePasswordCommand(vaultService));
+        commands.put("retrieve-credentials", new CommandInfo(new RetrieveCredentialCommand(vaultService), true));
+        commands.put("generate-password", new CommandInfo(new GeneratePasswordCommand(vaultService), true));
+        commands.put("add-password",  new CommandInfo(new AddPasswordCommand(vaultService), true));
+        commands.put("remove-password", new CommandInfo(new RemovePasswordCommand(vaultService), true));
     }
 
     public String execute(String commandLine) {
@@ -54,12 +67,13 @@ public class CommandHandler {
             return logout();
         }
 
-        Command command = commands.get(cmd);
-        if (command == null) {
-            return "Unknown command: " + cmd + "!";
+        CommandInfo cmdInfo = commands.get(cmd);
+        if (cmdInfo == null) {
+            return "Unknown command: " + cmd + "! Type help for more information.";
         }
+        Command command = cmdInfo.command;
 
-        if (isSessionExpired()) {
+        if (cmdInfo.requiresAuth && isSessionExpired()) {
             setCurrentUser(null);
             return "Session has expired. Please login again.";
         }
@@ -97,7 +111,7 @@ public class CommandHandler {
         this.currentUser = currentUser;
     }
 
-    Map<String, Command> getCommands() {
+    Map<String, CommandInfo> getCommands() {
         return commands;
     }
 }

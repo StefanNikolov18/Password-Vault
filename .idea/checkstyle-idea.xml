@@ -6,13 +6,14 @@
     <copyLibs>true</copyLibs>
     <option name="thirdPartyClasspath" />
     <option name="activeLocationIds">
-      <option value="e8e3bea6-6739-4a77-8553-ce63e73abf13" />
+      <option value="41493973-a0a6-4003-a4ee-807ee762006b" />
     </option>
     <option name="locations">
       <list>
         <ConfigurationLocation id="bundled-sun-checks" type="BUNDLED" scope="All" description="Sun Checks">(bundled)</ConfigurationLocation>
         <ConfigurationLocation id="bundled-google-checks" type="BUNDLED" scope="All" description="Google Checks">(bundled)</ConfigurationLocation>
         <ConfigurationLocation id="e8e3bea6-6739-4a77-8553-ce63e73abf13" type="LOCAL_FILE" scope="All" description="MJT">$USER_HOME$/OneDrive/Работен плот/Java/JavaTechnologyCourse/TaskGrader/checkstyle.xml</ConfigurationLocation>
+        <ConfigurationLocation id="41493973-a0a6-4003-a4ee-807ee762006b" type="PROJECT_RELATIVE" scope="All" description="MJTC">$PROJECT_DIR$/../Java-Checkstyle/mjt.xml</ConfigurationLocation>
       </list>
     </option>
   </component>
