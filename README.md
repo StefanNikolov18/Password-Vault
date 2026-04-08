@@ -1,11 +1,77 @@
-Password-Vault
+# Password Vault (Java Net)
 
-Сървърът стартира на порт 4444 и обслужва множество клиенти едновременно.
-Потребителите се регистрират и логват чрез AuthenticationService.
-Всеки потребител има локален vault файл за съхранение на пароли в data/vault/.
-Паролите се криптират с AES преди запис и декриптират за retrieve-credentials.
-VaultService обработва добавяне, премахване, генериране и извличане на пароли.
-Генерирането и добавянето на пароли се проверяват за сигурност чрез Enzoic API.
-CommandHandler приема и изпълнява команди от клиентите.
-Грешки и изключения се логват в data/logs/error.log.
-При стартирането на сървъра Users се четат от users.db където паролите са им хеширани с sha256Sum! 
+A secure multi-client password management server built with **Java (Sockets / Java Net)**.
+It allows users to safely store, generate, and retrieve credentials with encryption and security validation.
+
+---
+
+## Features
+
+* **User Authentication**
+
+  * Register & login via `AuthenticationService`
+  * Passwords stored hashed using **SHA-256**
+  * User data persisted in `users.db`
+
+*  **Secure Vault Storage**
+
+  * Each user has an individual vault file in:
+
+    ```
+    data/vault/
+    ```
+  * Credentials are encrypted using **AES** before storage
+  * Decrypted only when retrieved
+
+*  **Vault Operations (VaultService)**
+
+  * Add credentials
+  * Remove credentials
+  * Retrieve stored passwords
+  * Generate secure passwords
+
+*  **Security Validation**
+
+  * Passwords are checked using **Enzoic API**
+  * Prevents weak or compromised passwords
+
+*  **Command Handling**
+
+  * `CommandHandler` processes all client requests
+  * Supports multiple simultaneous clients
+
+*  **Error Logging**
+
+  * All errors are logged in:
+
+    ```
+    data/logs/error.log
+    ```
+
+---
+
+##  Server
+
+* Runs on:
+
+  ```
+  Port: 4444
+  ```
+* Handles multiple clients concurrently
+
+---
+
+##  Security Overview
+
+* AES encryption for stored credentials
+* SHA-256 hashing for user passwords
+* External API validation (Enzoic) for password strength
+* Isolated vault per user
+
+## To Started
+1. Clone the repository
+git clone <your-repo-url>
+cd Password-Vault
+2. Compile
+javac *.java
+3. Run the server and Client
