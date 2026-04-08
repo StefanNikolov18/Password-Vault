@@ -1,6 +1,6 @@
-# Password Vault (Java Net)
+# Password Vault
 
-A secure multi-client password management server built with **Java (Sockets / Java Net)**.
+A secure multi-client password management server built with **Java (Java Net)**.
 It allows users to safely store, generate, and retrieve credentials with encryption and security validation.
 
 ---
