@@ -70,8 +70,8 @@ It allows users to safely store, generate, and retrieve credentials with encrypt
 
 ## To Started
 1. Clone the repository
-git clone <your-repo-url>
-cd Password-Vault
+* git clone <your-repo-url>
+* cd Password-Vault
 2. Compile
-javac *.java
+* javac *.java
 3. Run the server and Client
