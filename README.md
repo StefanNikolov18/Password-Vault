@@ -1,4 +1,4 @@
-# Password Vault
+# Password Vault - MJT course FMI
 
 A secure multi-client password management server built with **Java (Java Net)**.
 It allows users to safely store, generate, and retrieve credentials with encryption and security validation.
@@ -75,3 +75,4 @@ It allows users to safely store, generate, and retrieve credentials with encrypt
 2. Compile
 * javac *.java
 3. Run the server and Client
+
